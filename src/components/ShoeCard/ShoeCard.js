@@ -35,15 +35,22 @@ const ShoeCard = ({
     <Link href={`/shoe/${slug}`}>
       <Wrapper>
         <ImageWrapper>
+          {variant === "on-sale" && <SaleBanner>Sale</SaleBanner>}
+          {variant === "new-release" && (
+            <NewReleaseBanner>Just Released!</NewReleaseBanner>
+          )}
           <Image alt="" src={imageSrc} />
         </ImageWrapper>
         <Spacer size={12} />
         <Row>
           <Name>{name}</Name>
-          <Price>{formatPrice(price)}</Price>
+          <Price className={variant}>{formatPrice(price)}</Price>
         </Row>
         <Row>
           <ColorInfo>{pluralize("Color", numOfColors)}</ColorInfo>
+          {variant === "on-sale" && (
+            <SalePrice>{formatPrice(salePrice)}</SalePrice>
+          )}
         </Row>
       </Wrapper>
     </Link>
@@ -59,11 +66,36 @@ const Wrapper = styled.article``;
 
 const ImageWrapper = styled.div`
   position: relative;
-  width: 100%;
+`;
+
+const Banner = styled.div`
+  color: white;
+  width: fit-content;
+
+  position: absolute;
+  top: 12px;
+  right: -4px;
+
+  padding: 7px 9px 9px 9px;
+
+  border-radius: 2px;
+
+  font-family: "Raleway", sans-serif;
+  font-weight: 700;
+  font-size: ${14 / 18}rem;
+`;
+
+const SaleBanner = styled(Banner)`
+  background-color: ${COLORS.primary};
+`;
+
+const NewReleaseBanner = styled(Banner)`
+  background-color: ${COLORS.secondary};
 `;
 
 const Image = styled.img`
   width: 100%;
+  border-radius: 16px 16px 4px 4px;
 `;
 
 const Row = styled.div`
@@ -78,7 +110,12 @@ const Name = styled.h3`
   color: ${COLORS.gray[900]};
 `;
 
-const Price = styled.span``;
+const Price = styled.span`
+  &.on-sale {
+    text-decoration: line-through;
+    color: ${COLORS.gray[700]};
+  }
+`;
 
 const ColorInfo = styled.p`
   color: ${COLORS.gray[700]};
